@@ -38,7 +38,8 @@ import UIKit
     var selectedEndCell: IndexPath?
 
     public var disabledDates: [Date]?
-
+    public var headerTextColor: UIColor = UIColor.darkGray
+    public var cellTextColor: UIColor = UIColor.darkGray
     public var cellHighlightedColor = UIColor(white: 0.9, alpha: 1.0)
     public static let defaultCellFontSize: CGFloat = 15.0
     public static let defaultHeaderFontSize: CGFloat = 17.0
@@ -105,7 +106,7 @@ import UIKit
         self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: navigationLeftItemFont], for: .normal)
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: navigationRightItemFont], for: .normal)
         
-        self.navigationItem.rightBarButtonItem?.isEnabled = selectedStartDate != nil && selectedEndDate != nil
+        self.navigationItem.rightBarButtonItem?.isEnabled = selectedStartDate != nil || selectedEndDate != nil
     }
 
     @objc func didTapCancel() {
@@ -113,11 +114,12 @@ import UIKit
     }
 
     @objc func didTapDone() {
-
         if selectedStartDate == nil && selectedEndDate == nil {
             return
         } else {
-            if selectedEndDate == nil {
+            if selectedStartDate == nil {
+                return
+            } else {
                 selectedEndDate = selectedStartDate
             }
         }
@@ -126,10 +128,8 @@ import UIKit
 
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        DispatchQueue.main.async { [weak self] in
-            if self?.selectedStartDate != nil || self?.scrollToDate != nil {
-                self?.scrollToSelection()
-            }
+        if selectedStartDate != nil || scrollToDate != nil {
+            self.scrollToSelection()
         }
     }
 }
@@ -159,6 +159,7 @@ extension CalendarDateRangePickerViewController {
         cell.selectedColor = self.selectedColor
         cell.selectedLabelColor = self.selectedLabelColor
         cell.highlightedLabelColor = self.highlightedLabelColor
+        cell.defaultTextColor = self.cellTextColor
         cell.font = self.cellFont
         cell.reset()
         let blankItems = getWeekday(date: getFirstDateForSection(section: indexPath.section)) - 1
@@ -278,6 +279,7 @@ extension CalendarDateRangePickerViewController {
             let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerReuseIdentifier, for: indexPath) as! CalendarDateRangePickerHeaderView
             headerView.label.text = getMonthLabel(date: getFirstDateForSection(section: indexPath.section))
             headerView.font = headerFont
+            headerView.titleColor = headerTextColor
             return headerView
         default:
             fatalError("Unexpected element kind")
@@ -358,13 +360,13 @@ extension CalendarDateRangePickerViewController {
             if let date = self.selectedStartDate {
                 let calendar = Calendar.current
                 let yearDiff = calendar.component(.year, from: date) - calendar.component(.year, from: minimumDate)
-                let selectedMonth = calendar.component(.month, from: date) + (yearDiff * 12) - (calendar.component(.month, from: minimumDate))
+                let selectedMonth = calendar.component(.month, from: date) + (yearDiff * 12) - (calendar.component(.month, from: Date()))
                 uCollectionView.scrollToItem(at: IndexPath(row: calendar.component(.day, from: date), section: selectedMonth), at: UICollectionView.ScrollPosition.centeredVertically, animated: false)
             }
             else if let date = self.scrollToDate {
                 let calendar = Calendar.current
                 let yearDiff = calendar.component(.year, from: date) - calendar.component(.year, from: minimumDate)
-                let selectedMonth = calendar.component(.month, from: date) + (yearDiff * 12) - (calendar.component(.month, from: minimumDate))
+                let selectedMonth = calendar.component(.month, from: date) + (yearDiff * 12) - (calendar.component(.month, from: Date()))
                 uCollectionView.scrollToItem(at: IndexPath(row: calendar.component(.day, from: date), section: selectedMonth), at: UICollectionView.ScrollPosition.centeredVertically, animated: false)
             }
         }
