@@ -115,12 +115,9 @@ import UIKit
     @objc func didTapDone() {
         if selectedStartDate == nil && selectedEndDate == nil {
             return
-        } else {
-            if selectedStartDate == nil {
-                return
-            } else {
-                selectedEndDate = selectedStartDate
-            }
+        }
+        if selectedEndDate == nil {
+            selectedEndDate = selectedStartDate
         }
         delegate.didPickDateRange(startDate: selectedStartDate!, endDate: selectedEndDate!)
     }
