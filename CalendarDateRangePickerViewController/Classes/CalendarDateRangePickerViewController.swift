@@ -42,6 +42,7 @@ import UIKit
     public var cellTextColor: UIColor = UIColor.darkGray
     public var weekDayTextColor: UIColor = UIColor.darkGray
     public var backgroundColor: UIColor = UIColor.white
+    public var titleColor: UIColor = .white
     
     public var cellHighlightedColor = UIColor(white: 0.9, alpha: 1.0)
     public static let defaultCellFontSize: CGFloat = 15.0
@@ -101,7 +102,7 @@ import UIKit
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: cancelText, style: .plain, target: self, action: #selector(CalendarDateRangePickerViewController.didTapCancel))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: doneText, style: .done, target: self, action: #selector(CalendarDateRangePickerViewController.didTapDone))
         
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: navigationTitleFont]
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: navigationTitleFont, .foregroundColor: titleColor]
         self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: navigationLeftItemFont], for: .normal)
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: navigationRightItemFont], for: .normal)
         
