@@ -40,6 +40,9 @@ import UIKit
     public var disabledDates: [Date]?
     public var headerTextColor: UIColor = UIColor.darkGray
     public var cellTextColor: UIColor = UIColor.darkGray
+    public var weekDayTextColor: UIColor = UIColor.darkGray
+    public var backgroundColor: UIColor = UIColor.white
+    
     public var cellHighlightedColor = UIColor(white: 0.9, alpha: 1.0)
     public static let defaultCellFontSize: CGFloat = 15.0
     public static let defaultHeaderFontSize: CGFloat = 17.0
@@ -82,11 +85,7 @@ import UIKit
 
         collectionView?.dataSource = self
         collectionView?.delegate = self
-        if #available(iOS 13.0, *) {
-            collectionView?.backgroundColor = UIColor.systemBackground
-        } else {
-            collectionView?.backgroundColor = UIColor.white
-        }
+        collectionView?.backgroundColor = backgroundColor
 
         collectionView?.register(CalendarDateRangePickerCell.self, forCellWithReuseIdentifier: cellReuseIdentifier)
         collectionView?.register(CalendarDateRangePickerHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerReuseIdentifier)
@@ -165,6 +164,7 @@ extension CalendarDateRangePickerViewController {
         let blankItems = getWeekday(date: getFirstDateForSection(section: indexPath.section)) - 1
         if indexPath.item < 7 {
             cell.label.text = getWeekdayLabel(weekday: indexPath.item + 1)
+            cell.defaultTextColor = weekDayTextColor
         } else if indexPath.item < 7 + blankItems {
             cell.label.text = ""
         } else {
