@@ -38,7 +38,8 @@ import UIKit
     var selectedEndCell: IndexPath?
 
     public var disabledDates: [Date]?
-
+    public var headerTextColor: UIColor = UIColor.darkGray
+    public var cellTextColor: UIColor = UIColor.darkGray
     public var cellHighlightedColor = UIColor(white: 0.9, alpha: 1.0)
     public static let defaultCellFontSize: CGFloat = 15.0
     public static let defaultHeaderFontSize: CGFloat = 17.0
@@ -158,6 +159,7 @@ extension CalendarDateRangePickerViewController {
         cell.selectedColor = self.selectedColor
         cell.selectedLabelColor = self.selectedLabelColor
         cell.highlightedLabelColor = self.highlightedLabelColor
+        cell.defaultTextColor = self.cellTextColor
         cell.font = self.cellFont
         cell.reset()
         let blankItems = getWeekday(date: getFirstDateForSection(section: indexPath.section)) - 1
@@ -277,6 +279,7 @@ extension CalendarDateRangePickerViewController {
             let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerReuseIdentifier, for: indexPath) as! CalendarDateRangePickerHeaderView
             headerView.label.text = getMonthLabel(date: getFirstDateForSection(section: indexPath.section))
             headerView.font = headerFont
+            headerView.titleColor = headerTextColor
             return headerView
         default:
             fatalError("Unexpected element kind")
